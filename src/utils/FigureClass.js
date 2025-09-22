@@ -50,6 +50,8 @@ export class King extends Figure {
     fullName = "King";
     sym = "k";
     weight = -1;
+
+    // Create new function
 }
 
 export class Pawn extends Figure {
