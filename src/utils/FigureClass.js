@@ -15,7 +15,7 @@ export class Figure {
     }
 }
 
-const checkBarier = (index) => index > 0 && index < 64;
+const checkBarier = (index) => index >= 0 && index < 64;
 
 export class Rook extends Figure {
     fullName = "Rook";
