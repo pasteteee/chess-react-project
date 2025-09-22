@@ -1,0 +1,13 @@
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 1px;
+
+    border: 2px solid var(--board-border-color);
+
+    // Сделать адаптивной ширину
+    aspect-ratio: 1/1;
+    width: 100%;
+    height: 100%;
+}

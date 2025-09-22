@@ -1,0 +1,32 @@
+.cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    transition: border 0.5s ease;
+
+    border: 2px solid transparent;
+
+    background-color: var(--white-cell-color);
+    &[color_type="black"] {
+        background-color: var(--black-cell-color);
+    }
+
+    &:hover {
+        border: 2px solid white;
+    }
+
+    &.underlined {
+        background-color: rgb(var(--cell-underline), 0.7);
+    }
+    &.underlined[color_type="white"] {
+        background-color: rgb(var(--cell-underline), 0.5);
+    }
+}
+
+.point {
+    width: 10px;
+    height: 10px;
+    background: var(--active-color);
+    border-radius: 50%;
+}
