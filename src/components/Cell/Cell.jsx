@@ -3,6 +3,8 @@ import { getCoordinatesSum } from "../../utils/additional";
 import { Figure } from "../Figure/Figure";
 import { useState } from "react";
 
+const cellActiveClasses = [null, styles.point, styles.captureIndicator, styles.specialIndicator, styles.specialIndicator]
+
 export const Cell = ({ index, value, pices, validMoves, clickEvent }) => {
     const [isUnderlined, setUnderlined] = useState(false);
 
@@ -17,6 +19,7 @@ export const Cell = ({ index, value, pices, validMoves, clickEvent }) => {
 
     console.log('Cell:', index, 'MoveType:', moveType, 'ValidMoves:', validMoves);
 
+
     return (
         <div
             onClick={() => clickEvent(index)}
@@ -27,17 +30,7 @@ export const Cell = ({ index, value, pices, validMoves, clickEvent }) => {
             ${moveType === 4 && styles.specialMove}`}
             color_type={value.color}
         >
-            {/* Точка для обычных ходов */}
-            {moveType === 1 && <div className={styles.point}></div>}
-
-            {/* Обводка для клеток с взятием */}
-            {moveType === 2 && <div className={styles.captureIndicator}></div>}
-
-            {/* Индикатор для специальных ходов */}
-            {moveType === 3 && <div className={styles.specialIndicator}></div>}
-
-            {/* Индикатор для рокировки */}
-            {moveType === 4 && <div className={styles.specialIndicator}></div>}
+            <div className={cellActiveClasses[moveType]}></div>
 
             {value.figure && <Figure value={value.figure} pices={pices} />}
         </div>
