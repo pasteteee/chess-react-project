@@ -6,7 +6,11 @@ export const App = () => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.board__wrapper}>
-                <Board startBoard={defaultBoard} pices={"alpha"} />
+                <Board
+                    startBoard={defaultBoard}
+                    pices={"alpha"}
+                    currentPlayerColor={"white"}
+                />
             </div>
         </div>
     );

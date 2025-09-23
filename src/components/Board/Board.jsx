@@ -5,44 +5,71 @@ import { useState, useRef } from "react";
 
 export const Board = (props) => {
     const [boardStatus] = useState(() => new BoardModel(props.startBoard));
-    const [validMoves, setValidMoves] = useState(Array(64).fill(false));
-    const [activeCell, setActiveCell] = useState(0);
+    const [validMoves, setValidMoves] = useState(Array(64).fill(0));
+    const [activeCell, setActiveCell] = useState(null);
+    const [updateTrigger, setUpdateTrigger] = useState(0);
 
-    function ClearValidMoves(setValidState) {
-        setValidState((prev) => [...prev].map((item) => 0));
+    function ClearValidMoves() {
+        setValidMoves(Array(64).fill(0));
     }
 
     function SetValidMovesByPices(figure) {
-        if (figure == null) return;
+        if (figure == null) {
+            ClearValidMoves();
+            return;
+        }
 
         let avaibleSteps = figure.setWays();
-        setValidMoves((prev) => [...avaibleSteps]);
+        setValidMoves([...avaibleSteps]);
     }
 
-    function figureStep(index) {
-        boardStatus.boardMatrix[activeCell].figure.stepTo(index);
+    function figureStep(fromIndex, toIndex) {
+        const fromCell = boardStatus.getCellByIndex(fromIndex);
+        if (fromCell && fromCell.figure) {
+            fromCell.figure.stepTo(toIndex);
+        }
     }
 
     function callCellAction(index) {
-        if (validMoves[index] > 0) figureStep(index);
+        const clickedCell = boardStatus.getCellByIndex(index);
 
-        ClearValidMoves(setValidMoves);
-        SetValidMovesByPices(boardStatus.boardMatrix[index].figure);
+        if (activeCell !== null && validMoves[index] > 0) {
+            const result = boardStatus.makeMove(activeCell, index);
+            if (result.success) {
+                setUpdateTrigger(prev => prev + 1);
+            }
 
-        setActiveCell(index);
+            ClearValidMoves();
+            setActiveCell(null);
+            return;
+        }
+
+        if (clickedCell.figure && clickedCell.figure.color === boardStatus.getCurrentPlayerColor()) {
+            if (activeCell === index) {
+                ClearValidMoves();
+                setActiveCell(null);
+            } else {
+                SetValidMovesByPices(clickedCell.figure);
+                setActiveCell(index);
+            }
+        }
+        else {
+            ClearValidMoves();
+            setActiveCell(null);
+        }
     }
+
+
 
     return (
         <div className={styles.board} onContextMenu={(e) => e.preventDefault()}>
-            {validMoves.map((el, ind) => {
+            {boardStatus.getAllCells().map((cell, ind) => {
                 return (
                     <Cell
-                        key={`${ind}-${validMoves[ind]}`}
-                        isValid={validMoves[ind]}
+                        key={`${ind}-${updateTrigger}-${validMoves[ind]}`}
                         index={ind}
                         pices={props.pices}
-                        value={boardStatus.getCellByIndex(ind)}
-                        setValidMoves={setValidMoves}
+                        value={cell}
                         validMoves={validMoves}
                         clickEvent={callCellAction}
                     />
