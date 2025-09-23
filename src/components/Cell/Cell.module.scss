@@ -4,10 +4,10 @@
     align-items: center;
     cursor: grab;
     transition: border 0.5s ease;
-
+    position: relative;
     border: 2px solid transparent;
-
     background-color: var(--white-cell-color);
+
     &[color_type="black"] {
         background-color: var(--black-cell-color);
     }
@@ -19,14 +19,42 @@
     &.underlined {
         background-color: rgb(var(--cell-underline), 0.7);
     }
+
     &.underlined[color_type="white"] {
         background-color: rgb(var(--cell-underline), 0.5);
+    }
+
+    &.validMove {
+        background-color: var(--cell-validMove);
+
+        &[color_type="black"] {
+            background-color: var(--cell-validMove);
+        }
+    }
+
+    &.captureMove {
+        background-color: var(--cell-captureMove);
+
+        &[color_type="black"] {
+            background-color: var(--cell-captureMove);
+        }
+    }
+
+    &.specialMove {
+        background-color: var(--cell-specialMove);
+
+        &[color_type="black"] {
+            background-color: var(--cell-specialMove);
+        }
     }
 }
 
 .point {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     background: var(--active-color);
     border-radius: 50%;
+    position: absolute;
+    z-index: 1;
 }
+

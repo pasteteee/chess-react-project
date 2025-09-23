@@ -4,6 +4,10 @@
     --active-color: #b1a6fc;
     --board-border-color: #e8edf9;
     --cell-underline: 158, 64, 64;
+
+    --cell-validMove: rgba(144, 238, 144, 0.3);
+    --cell-captureMove: rgba(255, 99, 71, 0.3);
+    --cell-specialMove: rgba(255, 215, 0, 0.3);
 }
 
 * {
