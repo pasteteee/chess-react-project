@@ -102,7 +102,7 @@ export default class BoardModel {
 
     isKingInCheck(color) {
         let kingX, kingY;
-
+        //abbb
         for (let x = 0; x < 8; x++) {
             for (let y = 0; y < 8; y++) {
                 const cell = this.boardMatrix[x][y];
