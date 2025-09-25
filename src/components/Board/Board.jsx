@@ -1,13 +1,13 @@
 import styles from "./Board.module.scss";
 import { Cell } from "../Cell/Cell";
 import BoardModel from "../../utils/Board";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Board = (props) => {
     const [boardStatus] = useState(() => new BoardModel(props.startBoard));
     const [validMoves, setValidMoves] = useState(Array(64).fill(0));
     const [activeCell, setActiveCell] = useState(null);
-    const [prevMove, setPrevMove] = useState(null);
+    const [prevMove, setPrevMove] = useState({x: 0, y: 0});
 
     function ClearValidMoves() {
         setValidMoves((...prev) => prev.map(() => 0));
@@ -23,28 +23,28 @@ export const Board = (props) => {
         setValidMoves((...prev) => [...avaibleSteps]);
     }
 
-    function callCellAction(index) {
+    function callCellAction(e, index) {
         const clickedCell = boardStatus.getCellByIndex(index);
 
         if (activeCell !== null && validMoves[index] > 0) {
             const result = boardStatus.makeMove(activeCell, index);
-            setPrevMove({
-                figure: activeCell.figure,
-                cell: activeCell
-            })
+            setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
             ClearValidMoves();
             setActiveCell(null);
         } else if (clickedCell.figure && clickedCell.figure.color === boardStatus.getCurrentPlayerColor()) {
             if (activeCell === index) {
                 ClearValidMoves();
+                setPrevMove(prev => ({...prev, x: 0, y: 0}));
                 setActiveCell(null);
             } else {
+                setPrevMove(prev => ({...prev, x: 0, y: 0}));
                 SetValidMovesByPices(clickedCell.figure);
                 setActiveCell(index);
             }
         } else {
             ClearValidMoves();
             setActiveCell(null);
+            setPrevMove(prev => ({...prev, x: 0, y: 0}));
         }
     }
 
@@ -53,7 +53,7 @@ export const Board = (props) => {
             {boardStatus.getAllCells().map((cell, ind) => {
                 return (
                     <Cell
-                        key={`${ind}-1`}
+                        key={`${ind}-cell`}
                         index={ind}
                         pices={props.pices}
                         value={cell}

@@ -5,16 +5,9 @@
     /* Dark */
     --white-cell-color-dark: #e8edf9;
     --black-cell-color-dark: #b7c0d8;
-    --active-color-dark: #b1a6fc;
+    --active-color-dark: #7b6dcf;
     --board-border-color-dark: #e8edf9;
     --cell-underline-dark: 158, 64, 64;
-
-    /* Light */
-    --white-cell-color-light: #e8edf9;
-    --black-cell-color-light: #b7c0d8;
-    --active-color-light: #b1a6fc;
-    --board-border-color-light: #e8edf9;
-    --cell-underline-light: 158, 64, 64;
 
     --cell-validMove: rgba(144, 238, 144, 0.3);
     --cell-captureMove: rgba(255, 99, 71, 0.3);
@@ -25,6 +18,10 @@
     --active-color: var(--active-color-dark);
     --board-border-color: var(--board-border-color-dark);
     --cell-underline: var(--cell-underline-dark);
+
+
+    --figure-transfer-translate-from: 0;
+    --figure-transfer-translate-to: 0;
 }
 
 * {
