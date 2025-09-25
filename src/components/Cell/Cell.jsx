@@ -15,8 +15,6 @@ export const Cell = ({ index, value, pices, validMoves, clickEvent }) => {
 
     const moveType = getMoveType();
 
-    console.log('Cell:', index, 'MoveType:', moveType, 'ValidMoves:', validMoves);
-
     return (
         <div
             onClick={() => clickEvent(index)}

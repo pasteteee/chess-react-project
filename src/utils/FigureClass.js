@@ -21,6 +21,8 @@ export class Figure {
 
         this.cell = this.board.boardMatrix[x][y];
         this.index = index;
+        this.x = this.cell.x;
+        this.y = this.cell.y;
     }
 }
 
@@ -29,7 +31,7 @@ const checkBarier = (index) => index >= 0 && index < 64;
 
 
 // array [64] : 0 - nothing,
-// 1 - step, 2 - capture, 3 - enPassant, 4 - castle
+// 1 - step, 2 - enPassant, 3 - castle
 
 
 
