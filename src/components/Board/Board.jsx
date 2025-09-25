@@ -1,7 +1,7 @@
 import styles from "./Board.module.scss";
 import { Cell } from "../Cell/Cell";
 import BoardModel from "../../utils/Board";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 export const Board = (props) => {
     const [boardStatus] = useState(() => new BoardModel(props.startBoard));
@@ -42,8 +42,6 @@ export const Board = (props) => {
             setActiveCell(null);
         }
     }
-
-
 
     return (
         <div className={styles.board} onContextMenu={(e) => e.preventDefault()}>

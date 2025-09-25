@@ -1,17 +1,50 @@
 :root {
-    --white-cell-color: #e8edf9;
-    --black-cell-color: #b7c0d8;
-    --active-color: #b1a6fc;
-    --board-border-color: #e8edf9;
-    --cell-underline: 158, 64, 64;
+    --color-dark: #252525;
+    --color-light: white;
+    
+    /* Dark */
+    --white-cell-color-dark: #e8edf9;
+    --black-cell-color-dark: #b7c0d8;
+    --active-color-dark: #b1a6fc;
+    --board-border-color-dark: #e8edf9;
+    --cell-underline-dark: 158, 64, 64;
+
+    /* Light */
+    --white-cell-color-light: #e8edf9;
+    --black-cell-color-light: #b7c0d8;
+    --active-color-light: #b1a6fc;
+    --board-border-color-light: #e8edf9;
+    --cell-underline-light: 158, 64, 64;
 
     --cell-validMove: rgba(144, 238, 144, 0.3);
     --cell-captureMove: rgba(255, 99, 71, 0.3);
     --cell-specialMove: rgba(255, 215, 0, 0.3);
+
+    --white-cell-color: var(--white-cell-color-dark);
+    --black-cell-color: var(--black-cell-color-dark);
+    --active-color: var(--active-color-dark);
+    --board-border-color: var(--board-border-color-dark);
+    --cell-underline: var(--cell-underline-dark);
 }
 
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    transition: color .5s ease, background-color .5s ease;
+}
+
+html[theme="dark"] {
+    --background-color: var(--color-dark);
+    --text-color: var(--color-light);
+}
+
+html[theme="light"] {
+    --background-color: var(--color-light);
+    --text-color: var(--color-dark);
+}
+
+html {
+    background: var(--background-color);
+    color: var(--text-color);
 }
