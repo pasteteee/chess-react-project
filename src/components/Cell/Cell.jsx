@@ -3,9 +3,7 @@ import { getCoordinatesSum } from "../../utils/additional";
 import { Figure } from "../Figure/Figure";
 import { useState } from "react";
 
-const cellActiveClasses = [null, styles.point, styles.captureIndicator, styles.specialIndicator, styles.specialIndicator]
-
-export const Cell = ({ index, value, pices, validMoves, clickEvent }) => {
+export const Cell = ({ index, value, pices, validMoves, clickEvent, prevMove }) => {
     const [isUnderlined, setUnderlined] = useState(false);
 
     return (
@@ -16,9 +14,8 @@ export const Cell = ({ index, value, pices, validMoves, clickEvent }) => {
             
             color_type={value.color}
         >
-            <div className={cellActiveClasses[validMoves[index]]}></div>
-
-            {value.figure && <Figure value={value.figure} pices={pices} />}
+            {validMoves[index] > 0 && <div className={styles.point} point-type={validMoves[index]}></div>}
+            {value.figure && <Figure value={value.figure} pices={pices} prevMove={prevMove}/>}
         </div>
     );
 };

@@ -7,6 +7,7 @@ export const Board = (props) => {
     const [boardStatus] = useState(() => new BoardModel(props.startBoard));
     const [validMoves, setValidMoves] = useState(Array(64).fill(0));
     const [activeCell, setActiveCell] = useState(null);
+    const [prevMove, setPrevMove] = useState(null);
 
     function ClearValidMoves() {
         setValidMoves((...prev) => prev.map(() => 0));
@@ -27,6 +28,10 @@ export const Board = (props) => {
 
         if (activeCell !== null && validMoves[index] > 0) {
             const result = boardStatus.makeMove(activeCell, index);
+            setPrevMove({
+                figure: activeCell.figure,
+                cell: activeCell
+            })
             ClearValidMoves();
             setActiveCell(null);
         } else if (clickedCell.figure && clickedCell.figure.color === boardStatus.getCurrentPlayerColor()) {
@@ -54,6 +59,7 @@ export const Board = (props) => {
                         value={cell}
                         validMoves={validMoves}
                         clickEvent={callCellAction}
+                        prevMove={prevMove}
                     />
                 );
             })}
