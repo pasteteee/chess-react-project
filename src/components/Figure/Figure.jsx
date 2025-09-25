@@ -2,26 +2,22 @@ import { useEffect, useState, useRef } from "react";
 import styles from "./Figure.module.scss";
 import { getCoordinates } from "../../utils/additional";
 
-export const Figure = ({value, pices, prevMove}) => {
+export const Figure = ({value, pices, prevMove, isAnimated}) => {
     const figureImg = useRef();
-    const [animCoord, setAnimCoord] = useState({x: 0, y: 0});
+    const [coord, setCoord] = useState({x: 0, y: 0});
 
     useEffect(() => {
-        const x = figureImg.current.x - prevMove.x,
-            y = figureImg.current.y - prevMove.y;
-        setAnimCoord(prev => ({...prev, x: x, 
-            y: y}));
-        console.log(animCoord)
-    }, [])
-
+        setCoord(prev => ({...prev, x: figureImg.current.x, y: figureImg.current.y}))
+    }, [isAnimated])
+    
     return (
-        <div className={styles.figure} draggable>
+        <div className={`${styles.figure} ${isAnimated ? styles.isAnimated : ''}`}  style={{
+                    '--figure-transfer-translate-x':  `${prevMove.x - coord.x}px`,
+                    '--figure-transfer-translate-y':  `${prevMove.y - coord.y}px`,
+                }} draggable>
             <img ref={figureImg}
                 src={`/pices/${pices}/${value.color[0]}${value.sym}.png`}
-                style={{
-                    '--figure-transfer-translate-x': animCoord.x,
-                    '--figure-transfer-translate-y': animCoord.y,
-                }}
+                
             />
         </div>
     );

@@ -3,6 +3,7 @@
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 1px;
+    overflow: hidden;
 
     border: 2px solid var(--board-border-color);
 

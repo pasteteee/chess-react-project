@@ -20,8 +20,8 @@
     --cell-underline: var(--cell-underline-dark);
 
 
-    --figure-transfer-translate-from: 0;
-    --figure-transfer-translate-to: 0;
+    --figure-transfer-translate-x: 0;
+    --figure-transfer-translate-y: 0;
 }
 
 * {

@@ -27,24 +27,23 @@ export const Board = (props) => {
         const clickedCell = boardStatus.getCellByIndex(index);
 
         if (activeCell !== null && validMoves[index] > 0) {
-            const result = boardStatus.makeMove(activeCell, index);
-            setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
+            boardStatus.makeMove(activeCell, index);
+            setActiveCell(index);
             ClearValidMoves();
-            setActiveCell(null);
         } else if (clickedCell.figure && clickedCell.figure.color === boardStatus.getCurrentPlayerColor()) {
             if (activeCell === index) {
                 ClearValidMoves();
-                setPrevMove(prev => ({...prev, x: 0, y: 0}));
+                setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
                 setActiveCell(null);
             } else {
-                setPrevMove(prev => ({...prev, x: 0, y: 0}));
+                setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
                 SetValidMovesByPices(clickedCell.figure);
                 setActiveCell(index);
             }
         } else {
             ClearValidMoves();
             setActiveCell(null);
-            setPrevMove(prev => ({...prev, x: 0, y: 0}));
+            setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
         }
     }
 
@@ -60,6 +59,7 @@ export const Board = (props) => {
                         validMoves={validMoves}
                         clickEvent={callCellAction}
                         prevMove={prevMove}
+                        activeCell={activeCell}
                     />
                 );
             })}
