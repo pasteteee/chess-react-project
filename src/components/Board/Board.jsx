@@ -53,7 +53,7 @@ export const Board = (props) => {
             {boardStatus.getAllCells().map((cell, ind) => {
                 return (
                     <Cell
-                        key={`${ind}-${validMoves[ind]}`}
+                        key={`${ind}-1`}
                         index={ind}
                         pices={props.pices}
                         value={cell}

@@ -33,21 +33,7 @@
     transform: translate(-50%, -50%);
     width: 12px;
     height: 12px;
-    animation: smooth_color 0.3s;
     border-radius: 50%;
     z-index: 1;
-
-    &[point-type="1"] {
-        background: var(--active-color);
-    }
-}
-
-@keyframes smooth_color {
-    from{
-        background: transparent;
-    }
-    to {
-        background-color: var(--active-color);
-    }
 }
 
