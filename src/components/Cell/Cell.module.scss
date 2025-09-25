@@ -1,9 +1,10 @@
 .cell {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: grab;
-    transition: border 0.5s ease;
+    transition: border-color 0.5s ease;
     position: relative;
     border: 2px solid transparent;
     background-color: var(--white-cell-color);
@@ -13,7 +14,7 @@
     }
 
     &:hover {
-        border: 2px solid white;
+        border-color: white;
     }
 
     &.underlined {
@@ -23,38 +24,30 @@
     &.underlined[color_type="white"] {
         background-color: rgb(var(--cell-underline), 0.5);
     }
-
-    &.validMove {
-        background-color: var(--cell-validMove);
-
-        &[color_type="black"] {
-            background-color: var(--cell-validMove);
-        }
-    }
-
-    &.captureMove {
-        background-color: var(--cell-captureMove);
-
-        &[color_type="black"] {
-            background-color: var(--cell-captureMove);
-        }
-    }
-
-    &.specialMove {
-        background-color: var(--cell-specialMove);
-
-        &[color_type="black"] {
-            background-color: var(--cell-specialMove);
-        }
-    }
 }
 
 .point {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 12px;
     height: 12px;
-    background: var(--active-color);
+    animation: smooth_color 0.3s;
     border-radius: 50%;
-    position: absolute;
     z-index: 1;
+
+    &[point-type="1"] {
+        background: var(--active-color);
+    }
+}
+
+@keyframes smooth_color {
+    from{
+        background: transparent;
+    }
+    to {
+        background-color: var(--active-color);
+    }
 }
 
