@@ -1,44 +1,33 @@
-import {Figure} from "../FigureClass.js";
+import { Figure } from "../FigureClass.js";
+import { calculateLinearMoves } from "./figureUtils.js";
 
+/**
+ * Класс, представляющий слона в шахматах
+ * Наследуется от базового класса Figure
+ * Слон ходит по диагонали на любое количество клеток
+ * Каждый слон остается на клетках своего цвета всю игру
+ */
 export class Bishop extends Figure {
     fullName = "Bishop";
     sym = "b";
     weight = 3;
 
+    /**
+     * Метод для расчета возможных ходов слона
+     * @returns {Array} Массив из 64 элементов, где:
+     *                  0 - ход невозможен
+     *                  1 - можно ходить на пустую клетку
+     *                  2 - можно бить вражескую фигуру
+     */
     setWays() {
-        let array = new Array(64).fill(0);
-        const { x, y } = this.cell;
-
         const directions = [
-            {dx: 1, dy: 1},
-            {dx: 1, dy: -1},
-            {dx: -1, dy: 1},
-            {dx: -1, dy: -1}
+            {dx: 1, dy: -1},   // Вправо-вниз
+            {dx: -1, dy: -1},  // Влево-вниз
+            {dx: 1, dy: 1},    // Вправо-вверх
+            {dx: -1, dy: 1}    // Влево-вверх
         ];
 
-        directions.forEach(dir => {
-            for (let i = 1; i < 8; i++) {
-                const newX = x + dir.dx * i;
-                const newY = y + dir.dy * i;
-
-                if (newX < 0 || newX >= 8 || newY < 0 || newY >= 8) break;
-
-                const newIndex = newX * 8 + newY;
-                const targetCell = this.board.getCellByIndex(newIndex);
-
-                if (!targetCell) break;
-
-                if (targetCell.figure === null) {
-                    array[newIndex] = 1;
-                } else if (targetCell.figure.color !== this.color) {
-                    array[newIndex] = 2;
-                    break;
-                } else {
-                    break;
-                }
-            }
-        });
-
-        return array;
+        // Используем общую функцию для расчета линейных ходов
+        return calculateLinearMoves(this, directions);
     }
 }

@@ -5,3 +5,6 @@ export { Pawn } from './Pawn.js';
 export { Queen } from './Queen.js';
 export { Knight } from './Knight.js';
 export { King } from './King.js';
+
+// Экспортируем утилиты
+export { calculateLinearMoves, calculatePointMoves } from './figureUtils';

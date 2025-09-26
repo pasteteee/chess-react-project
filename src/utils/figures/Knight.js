@@ -1,40 +1,37 @@
-import {Figure} from "../FigureClass.js";
+import { Figure } from "../FigureClass.js";
+import { calculatePointMoves } from "./figureUtils.js";
 
+/**
+ * Класс, представляющий коня в шахматах
+ * Наследуется от базового класса Figure
+ * Конь ходит буквой "Г" - на 2 клетки в одном направлении и на 1 в перпендикулярном
+ * Единственная фигура, которая может "перепрыгивать" через другие фигуры
+ */
 export class Knight extends Figure {
     fullName = "Knight";
     sym = "n";
     weight = 3;
 
+    /**
+     * Метод для расчета возможных ходов коня
+     * @returns {Array} Массив из 64 элементов, где:
+     *                  0 - ход невозможен
+     *                  1 - можно ходить на пустую клетку
+     *                  2 - можно бить вражескую фигуру
+     */
     setWays() {
-        let array = new Array(64).fill(0);
-        const{ x, y } = this.cell;
-
         const knightMoves = [
-            {dx: 2, dy: 1}, {dx: 2, dy: -1},
-            {dx: -2, dy: 1}, {dx: -2, dy: -1},
-            {dx: 1, dy: 2}, {dx: 1, dy: -2},
-            {dx: -1, dy: 2}, {dx: -1, dy: -2}
+            {dx: 2, dy: 1},   // Два вправо, один вверх
+            {dx: 2, dy: -1},  // Два вправо, один вниз
+            {dx: -2, dy: 1},  // Два влево, один вверх
+            {dx: -2, dy: -1}, // Два влево, один вниз
+            {dx: 1, dy: 2},   // Один вправо, два вверх
+            {dx: 1, dy: -2},  // Один вправо, два вниз
+            {dx: -1, dy: 2},  // Один влево, два вверх
+            {dx: -1, dy: -2}  // Один влево, два вниз
         ];
 
-        knightMoves.forEach(move => {
-            const newX = x + move.dx;
-            const newY = y + move.dy;
-
-            if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
-                const newIndex = newX * 8 + newY;
-                const targetCell = this.board.getCellByIndex(newIndex);
-
-                if (!targetCell) return;
-
-                if (targetCell.figure === null) {
-                    array[newIndex] = 1;
-                }
-                else if (targetCell.figure && targetCell.figure.color !== this.color) {
-                    array[newIndex] = 2;
-                }
-            }
-        });
-
-        return array;
+        // Используем общую функцию для расчета точечных ходов
+        return calculatePointMoves(this, knightMoves);
     }
 }

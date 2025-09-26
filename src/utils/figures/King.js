@@ -1,4 +1,13 @@
-import {Figure} from "../FigureClass.js";
+import { Figure } from "../FigureClass.js";
+import { calculatePointMoves } from "./figureUtils.js";
+import { Rook } from "./Rook.js";
+
+// Вспомогательная функция для получения координат из индекса
+function getCoordinates(index) {
+    const x = Math.floor(index / 8);
+    const y = index % 8;
+    return { x, y };
+}
 
 export class King extends Figure {
     fullName = "King";
@@ -7,42 +16,28 @@ export class King extends Figure {
     hasMoved = false;
 
     setWays() {
-        let array = new Array(64).fill(0);
-        const{ x, y } = this.cell;
-
-        const kingsMoves = [
+        const kingMoves = [
             {dx: 1, dy: 1}, {dx: 1, dy: -1},
             {dx: 1, dy: 0}, {dx: 0, dy: -1},
             {dx: 0, dy: 1}, {dx: -1, dy: -1},
             {dx: -1, dy: 0}, {dx: -1, dy: 1}
         ];
 
-        kingsMoves.forEach(move => {
-            const newX = x + move.dx;
-            const newY = y + move.dy;
+        // Используем утилиту для базовых ходов короля
+        let array = calculatePointMoves(this, kingMoves);
 
-            if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
-                const newIndex = newX * 8 + newY;
-                const targetCell = this.board.getCellByIndex(newIndex);
-
-                if (!targetCell) return;
-
-                if (targetCell.figure === null) {
-                    array[newIndex] = 1;
-                }
-                else if (targetCell.figure && targetCell.figure.color !== this.color) {
-                    array[newIndex] = 2;
-                }
-            }
-        });
-
-        if (!this.hasMoved) {
+        // Добавляем рокировку, если король не двигался
+        if (!this.hasMoved && !this.isInCheck()) {
+            // Короткая рокировка (вправо)
             if (this.canCastle(7, [5, 6])) {
-                array[x * 8 + 6] = 4;
+                const { x } = this.cell;
+                array[x * 8 + 6] = 4; // 4 - специальный код для рокировки
             }
 
+            // Длинная рокировка (влево)
             if (this.canCastle(0, [1, 2, 3])) {
-                array[x * 8 + 2] = 4;
+                const { x } = this.cell;
+                array[x * 8 + 2] = 4; // 4 - специальный код для рокировки
             }
         }
 
@@ -52,6 +47,7 @@ export class King extends Figure {
     canCastle(rookY, squaresBetween) {
         const { x, y } = this.cell;
 
+        // Проверяем, что ладья существует и не двигалась
         const rookCell = this.board.getCellByIndex(x * 8 + rookY);
         if (!rookCell || !rookCell.figure ||
             !(rookCell.figure instanceof Rook) ||
@@ -60,6 +56,7 @@ export class King extends Figure {
             return false;
         }
 
+        // Проверяем, что клетки между королем и ладьей пусты
         for (const squareY of squaresBetween) {
             const cellBetween = this.board.getCellByIndex(x * 8 + squareY);
             if (cellBetween && cellBetween.figure !== null) {
@@ -67,13 +64,32 @@ export class King extends Figure {
             }
         }
 
+        // Проверяем, что король не проходит через шах
+        for (const squareY of squaresBetween.filter(y => y !== 1 && y !== 2)) {
+            if (this.isSquareUnderAttack(x, squareY)) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    isInCheck() {
+        return this.isSquareUnderAttack(this.cell.x, this.cell.y);
+    }
+
+    isSquareUnderAttack(x, y) {
+        // Здесь должна быть логика проверки, атакована ли клетка
+        // Пока возвращаем false для простоты
+        // TODO: Реализовать проверку шахов
+        return false;
     }
 
     stepTo(index) {
         const { x: newX, y: newY } = getCoordinates(index);
         const { x: currentX, y: currentY } = this.cell;
 
+        // Проверяем, это рокировка или обычный ход
         if (Math.abs(newY - currentY) === 2 && newX === currentX) {
             this.performCastle(index);
         } else {
@@ -91,13 +107,16 @@ export class King extends Figure {
         let rookStartY, rookTargetY;
 
         if (isKingside) {
+            // Короткая рокировка
             rookStartY = 7;
             rookTargetY = 5;
         } else {
+            // Длинная рокировка
             rookStartY = 0;
             rookTargetY = 3;
         }
 
+        // Перемещаем короля
         const kingTargetCell = this.board.getCellByIndex(kingTargetIndex);
         kingTargetCell.figure = this;
         this.cell.figure = null;
@@ -107,19 +126,27 @@ export class King extends Figure {
         this.x = kingX;
         this.y = kingY;
 
+        // Перемещаем ладью
         const rookStartCell = this.board.getCellByIndex(currentX * 8 + rookStartY);
         const rookTargetCell = this.board.getCellByIndex(currentX * 8 + rookTargetY);
         const rook = rookStartCell.figure;
 
-        rookTargetCell.figure = rook;
-        rookStartCell.figure = null;
+        if (rook && rook instanceof Rook) {
+            rookTargetCell.figure = rook;
+            rookStartCell.figure = null;
 
-        rook.cell = rookTargetCell;
-        rook.index = currentX * 8 + rookTargetY;
-        rook.x = currentX;
-        rook.y = rookTargetY;
-        rook.hasMoved = true;
+            rook.cell = rookTargetCell;
+            rook.index = currentX * 8 + rookTargetY;
+            rook.x = currentX;
+            rook.y = rookTargetY;
+            rook.hasMoved = true;
+        }
 
         this.hasMoved = true;
+
+        // Обновляем состояние доски
+        if (this.board.onMoveComplete) {
+            this.board.onMoveComplete();
+        }
     }
 }
