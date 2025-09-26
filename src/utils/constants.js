@@ -1,4 +1,4 @@
-import { Bishop, King, Knight, Pawn, Queen, Rook } from "./FigureClass";
+import { Bishop, King, Knight, Pawn, Queen, Rook } from './figures';
 
 export const picesValues = new Map([
     [1, Rook],

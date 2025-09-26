@@ -1,6 +1,6 @@
 import { getCoordinates } from "./additional";
 import { picesValues } from "./constants";
-import { King, Rook, Queen, Bishop, Knight, Pawn } from "./FigureClass";
+import { Bishop, King, Knight, Pawn, Queen, Rook } from './figures';
 
 export default class BoardModel {
     constructor(pattern) {
