@@ -33,9 +33,11 @@ export const Board = (props) => {
         } else if (clickedCell.figure && clickedCell.figure.color === boardStatus.getCurrentPlayerColor()) {
             if (activeCell === index) {
                 ClearValidMoves();
-                setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
                 setActiveCell(null);
             } else {
+                const el = e.target;
+                if (el == e.currentTarget)
+                    el = el.children[1].children[0]
                 setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
                 SetValidMovesByPices(clickedCell.figure);
                 setActiveCell(index);
@@ -43,7 +45,6 @@ export const Board = (props) => {
         } else {
             ClearValidMoves();
             setActiveCell(null);
-            setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
         }
     }
 
