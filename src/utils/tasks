@@ -12,4 +12,4 @@
 
 
 // array [64] : 0 - nothing,
-// 1 - step, 2 - enPassant, 3 - castle
+// 1 - step, 2 - capture, 3 - enPassant, 4 - castle
