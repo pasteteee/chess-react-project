@@ -20,6 +20,7 @@ export class King extends Figure {
         // Используем утилиту для базовых ходов короля
         let array = calculatePointMoves(this, kingMoves);
 
+        // Проверка атакованы ли клетки на которые может походить король
         for (let i = 0; i < array.length; i++) {
             const { x, y } = getCoordinates(i);
             console.log(x, y, array[i], this.isSquareUnderAttack(x, y, this.color));
@@ -78,6 +79,7 @@ export class King extends Figure {
 
     isInCheck() {
         let kingX, kingY;
+        // Проходим каждое поле
         for (let x = 0; x < 8; x++) {
             for (let y = 0; y < 8; y++) {
                 const cell = this.board.boardMatrix[x][y];
@@ -99,11 +101,12 @@ export class King extends Figure {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 const cell = this.board.boardMatrix[i][j];
+                // Проверяем какие клетки атакует каждая вражеская фигура(кроме короля)
                 if (cell.figure && cell.figure.color === attackerColor && !(cell.figure instanceof King)) {
                     const moves = cell.figure.setWays();
                     const targetIndex = x * 8 + y;
 
-                    if (moves[targetIndex] === 2 || moves[targetIndex] === 1) { // 2 - код для атаки
+                    if (moves[targetIndex] === 2 || moves[targetIndex] === 1) { // 2 - код для атаки, 1 - код для хода
                         return true;
                     }
                 }
