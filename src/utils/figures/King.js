@@ -1,13 +1,7 @@
 import { Figure } from "../FigureClass.js";
 import { calculatePointMoves } from "./figureUtils.js";
 import { Rook } from "./Rook.js";
-
-// Вспомогательная функция для получения координат из индекса
-function getCoordinates(index) {
-    const x = Math.floor(index / 8);
-    const y = index % 8;
-    return { x, y };
-}
+import { getCoordinates } from "../additional.js";
 
 export class King extends Figure {
     fullName = "King";
@@ -25,6 +19,14 @@ export class King extends Figure {
 
         // Используем утилиту для базовых ходов короля
         let array = calculatePointMoves(this, kingMoves);
+
+        for (let i = 0; i < array.length; i++) {
+            const { x, y } = getCoordinates(i);
+            console.log(x, y, array[i], this.isSquareUnderAttack(x, y, this.color));
+            if(array[i] === 1 && this.isSquareUnderAttack(x, y, this.color)) {
+                array[i] = 0;
+            }
+        }
 
         // Добавляем рокировку, если король не двигался
         if (!this.hasMoved && !this.isInCheck()) {
@@ -101,7 +103,7 @@ export class King extends Figure {
                     const moves = cell.figure.setWays();
                     const targetIndex = x * 8 + y;
 
-                    if (moves[targetIndex] === 2) { // 2 - код для атаки
+                    if (moves[targetIndex] === 2 || moves[targetIndex] === 1) { // 2 - код для атаки
                         return true;
                     }
                 }
