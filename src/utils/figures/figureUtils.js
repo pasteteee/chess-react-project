@@ -65,3 +65,8 @@ export const calculatePointMoves = (figure, moves) => {
 
     return array;
 };
+
+export const deleteCheckMoves = (figure, array) => {
+    const { x, y } = figure.cell;
+
+}

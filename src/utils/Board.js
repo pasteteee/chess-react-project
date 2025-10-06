@@ -73,6 +73,8 @@ export default class BoardModel {
             return { success: false, message: "Недопустимый ход" };
         }
 
+        this.clearAllEnPassantTargets();
+
         const moveInfo = {
             from: fromIndex,
             to: toIndex,
@@ -107,13 +109,13 @@ export default class BoardModel {
     //}
 
     // Очистка целей взятия на проходе для всех пешек
-    //clearAllEnPassantTargets() {
-        //this.getAllCells().forEach(cell => {
-            //if (cell.figure && cell.figure.enPassantTarget !== undefined) {
-                //cell.figure.clearEnPassantTarget();
-            //}
-        //});
-    //}
+    clearAllEnPassantTargets() {
+        this.getAllCells().forEach(cell => {
+            if (cell.figure && cell.figure.enPassantTarget !== undefined && cell.figure.color === this.currentPlayer) {
+                cell.figure.clearEnPassantTarget();
+            }
+        });
+    }
 }
 
 export class Cell {
