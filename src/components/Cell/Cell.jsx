@@ -10,29 +10,34 @@ export const Cell = ({
   clickEvent,
   prevMove,
   activeCell,
-  mouseDownEvent
+  setDraggingMove
 }) => {
-  const pointClasses = ["", styles.symple, styles.beat, styles.symple];
-
+  const pointClasses = ["", styles.symple, styles.beat, styles.check, styles.castle];
+  const [isDragging, setIsDragging] = useState(false);
   const [isUnderlined, setUnderlined] = useState(false);
 
   return (
     <div
-      onClick={(e) => clickEvent(e, index)}
-      onMouseDown={(e) => mouseDownEvent(e, index)}
+      onMouseDown={(e) => clickEvent(e, index)}
       onAuxClick={() => setUnderlined((prev) => !prev)}
       className={`${styles.cell} ${isUnderlined ? styles.underlined : ""}`}
       color_type={value.color}
+      data-index={index}
     >
-      <div
+      <div data-index={index}
         className={`${styles.point} ${pointClasses[validMoves[index]]}`}
       ></div>
+
       {value.figure && (
         <Figure
           value={value.figure}
           pices={pices}
           prevMove={prevMove}
           isAnimated={activeCell === index}
+          isDragging={isDragging}
+          setIsDragging={setIsDragging}
+          index={index}
+          setDraggingMove={setDraggingMove}
         />
       )}
     </div>

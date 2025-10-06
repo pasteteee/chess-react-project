@@ -16,10 +16,11 @@
     --white-cell-color: var(--white-cell-color-dark);
     --black-cell-color: var(--black-cell-color-dark);
     --active-color: var(--active-color-dark);
+    --secondary-color: #6daacf;
     --board-border-color: var(--board-border-color-dark);
     --cell-underline: var(--cell-underline-dark);
 
-
+    
     --figure-transfer-translate-x: 0;
     --figure-transfer-translate-y: 0;
 }

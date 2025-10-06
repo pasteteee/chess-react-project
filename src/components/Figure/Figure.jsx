@@ -3,13 +3,12 @@ import styles from "./Figure.module.scss";
 import { getCoordinates } from "../../utils/additional";
 import { Ghost } from "../Ghost/Ghost";
 
-export const Figure = ({ value, pices, prevMove, isAnimated }) => {
+export const Figure = ({ index, value, pices, prevMove, isAnimated, isDragging, setIsDragging, setDraggingMove }) => {
   const imgSrc = `/pices/${pices}/${value.color[0]}${value.sym}.png`;
 
   const figureImg = useRef();
 
   const [coord, setCoord] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
   const [dragPosition, setDragPosition] = useState({x: 0, y: 0});
 
   const startDragging = (e) => {
@@ -31,10 +30,12 @@ export const Figure = ({ value, pices, prevMove, isAnimated }) => {
 
     };
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e) => {
       setIsDragging(false);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+
+      setDraggingMove(e.target.attributes["data-index"].nodeValue);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -58,10 +59,12 @@ export const Figure = ({ value, pices, prevMove, isAnimated }) => {
         zIndex: isDragging ? 1000 : 1,
       }}
       draggable
+      data-index={index}
     >
       <img
         onMouseDown={startDragging}
         ref={figureImg}
+        data-index={index}
         style={{
           opacity: isDragging ? 0.3 : 1
         }}

@@ -10,7 +10,7 @@ export const App = () => {
             <div className={styles.board__wrapper}>
                 <Board
                     startBoard={defaultBoard}
-                    pices={"alpha"}
+                    pices={"california"}
                     currentPlayerColor={"white"}
                 />
             </div>

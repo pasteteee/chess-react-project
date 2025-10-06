@@ -8,6 +8,12 @@ export const Board = (props) => {
     const [validMoves, setValidMoves] = useState(Array(64).fill(0));
     const [activeCell, setActiveCell] = useState(null);
     const [prevMove, setPrevMove] = useState({x: 0, y: 0});
+    const [draggingMove, setDraggingMove] = useState(null);
+
+    useEffect(() => {
+        if (draggingMove !== null)
+            callCellAction({}, draggingMove)
+    }, [draggingMove])
 
     function ClearValidMoves() {
         setValidMoves((...prev) => prev.map(() => 0));
@@ -31,26 +37,20 @@ export const Board = (props) => {
             setActiveCell(index);
             ClearValidMoves();
         } else if (clickedCell.figure && clickedCell.figure.color === boardStatus.getCurrentPlayerColor()) {
-            if (activeCell === index) {
-                ClearValidMoves();
-                setActiveCell(null);
-            } else {
-                const el = e.target;
+            const el = e.target;
+            try {
                 if (el == e.currentTarget)
                     el = el.children[1].children[0]
                 setPrevMove(prev => ({...prev, x: e.target.x, y: e.target.y}));
-                SetValidMovesByPices(clickedCell.figure);
-                setActiveCell(index);
+            } catch {
+                setPrevMove(0);    
             }
+            SetValidMovesByPices(clickedCell.figure);
+            setActiveCell(index);
         } else {
             ClearValidMoves();
             setActiveCell(null);
         }
-    }
-
-    const mouseDownEvent = (event, index) => {
-        ClearValidMoves();
-        setActiveCell(null);
     }
 
     return (
@@ -66,7 +66,7 @@ export const Board = (props) => {
                         clickEvent={callCellAction}
                         prevMove={prevMove}
                         activeCell={activeCell}
-                        mouseDownEvent={mouseDownEvent}
+                        setDraggingMove={setDraggingMove}
                     />
                 );
             })}
