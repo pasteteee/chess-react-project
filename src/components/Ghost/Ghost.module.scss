@@ -1,0 +1,10 @@
+.ghost {
+    width: 100px;
+    height: 100px;
+    display: block;
+    position: fixed;
+    pointer-events: none;
+    padding: 10px;
+    z-index: 100;
+    transition: transform .1s ease;
+}

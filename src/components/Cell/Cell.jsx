@@ -10,6 +10,7 @@ export const Cell = ({
   clickEvent,
   prevMove,
   activeCell,
+  mouseDownEvent
 }) => {
   const pointClasses = ["", styles.symple, styles.beat, styles.symple];
 
@@ -18,6 +19,7 @@ export const Cell = ({
   return (
     <div
       onClick={(e) => clickEvent(e, index)}
+      onMouseDown={(e) => mouseDownEvent(e, index)}
       onAuxClick={() => setUnderlined((prev) => !prev)}
       className={`${styles.cell} ${isUnderlined ? styles.underlined : ""}`}
       color_type={value.color}

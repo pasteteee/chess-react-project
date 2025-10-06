@@ -48,6 +48,11 @@ export const Board = (props) => {
         }
     }
 
+    const mouseDownEvent = (event, index) => {
+        ClearValidMoves();
+        setActiveCell(null);
+    }
+
     return (
         <div className={styles.board} onContextMenu={(e) => e.preventDefault()}>
             {boardStatus.getAllCells().map((cell, ind) => {
@@ -61,6 +66,7 @@ export const Board = (props) => {
                         clickEvent={callCellAction}
                         prevMove={prevMove}
                         activeCell={activeCell}
+                        mouseDownEvent={mouseDownEvent}
                     />
                 );
             })}
