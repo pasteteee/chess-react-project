@@ -1,13 +1,7 @@
 import { Figure } from "../FigureClass.js";
 import { calculatePointMoves } from "./figureUtils.js";
 import { Rook } from "./Rook.js";
-
-// Вспомогательная функция для получения координат из индекса
-function getCoordinates(index) {
-    const x = Math.floor(index / 8);
-    const y = index % 8;
-    return { x, y };
-}
+import { getCoordinates } from "../additional.js";
 
 export class King extends Figure {
     fullName = "King";
@@ -25,6 +19,15 @@ export class King extends Figure {
 
         // Используем утилиту для базовых ходов короля
         let array = calculatePointMoves(this, kingMoves);
+
+        // Проверка атакованы ли клетки на которые может походить король
+        for (let i = 0; i < array.length; i++) {
+            const { x, y } = getCoordinates(i);
+            console.log(x, y, array[i], this.isSquareUnderAttack(x, y, this.color));
+            if(array[i] === 1 && this.isSquareUnderAttack(x, y, this.color)) {
+                array[i] = 0;
+            }
+        }
 
         // Добавляем рокировку, если король не двигался
         if (!this.hasMoved && !this.isInCheck()) {
@@ -66,7 +69,7 @@ export class King extends Figure {
 
         // Проверяем, что король не проходит через шах
         for (const squareY of squaresBetween.filter(y => y !== 1 && y !== 2)) {
-            if (this.isSquareUnderAttack(x, squareY)) {
+            if (this.isSquareUnderAttack(x, squareY, this.color)) {
                 return false;
             }
         }
@@ -75,13 +78,41 @@ export class King extends Figure {
     }
 
     isInCheck() {
-        return this.isSquareUnderAttack(this.cell.x, this.cell.y);
+        let kingX, kingY;
+        // Проходим каждое поле
+        for (let x = 0; x < 8; x++) {
+            for (let y = 0; y < 8; y++) {
+                const cell = this.board.boardMatrix[x][y];
+                if (cell.figure && cell.figure instanceof King && cell.figure.color === this.color) {
+                    kingX = x;
+                    kingY = y;
+                    break;
+                }
+            }
+        }
+
+        if (kingX === undefined || kingY === undefined) return false;
+        return this.isSquareUnderAttack(this.cell.x, this.cell.y, this.color);
     }
 
-    isSquareUnderAttack(x, y) {
-        // Здесь должна быть логика проверки, атакована ли клетка
-        // Пока возвращаем false для простоты
-        // TODO: Реализовать проверку шахов
+    isSquareUnderAttack(x, y, defenderColor) {
+        const attackerColor = defenderColor === "white" ? "black" : "white";
+
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                const cell = this.board.boardMatrix[i][j];
+                // Проверяем какие клетки атакует каждая вражеская фигура(кроме короля)
+                if (cell.figure && cell.figure.color === attackerColor && !(cell.figure instanceof King)) {
+                    const moves = cell.figure.setWays();
+                    const targetIndex = x * 8 + y;
+
+                    if (moves[targetIndex] === 2 || moves[targetIndex] === 1) { // 2 - код для атаки, 1 - код для хода
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 

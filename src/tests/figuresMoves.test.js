@@ -1,5 +1,5 @@
-import { Rook, Knight, Bishop, Queen, King, Pawn } from '../utils/FigureClass.js';
-import { Board } from '../utils/Board.js';
+import { Rook, Knight, Bishop, Queen, King, Pawn } from '../utils/figures';
+import { BoardModel } from '../utils/Board.js';
 import { getCoordinates } from '../utils/additional.js';
 
 // Mock-объект для клетки

@@ -100,44 +100,6 @@ export default class BoardModel {
         return this.moveCount;
     }
 
-    isKingInCheck(color) {
-        let kingX, kingY;
-        //abbb
-        for (let x = 0; x < 8; x++) {
-            for (let y = 0; y < 8; y++) {
-                const cell = this.boardMatrix[x][y];
-                if (cell.figure && cell.figure instanceof King && cell.figure.color === color) {
-                    kingX = x;
-                    kingY = y;
-                    break;
-                }
-            }
-        }
-
-        if (kingX === undefined || kingY === undefined) return false;
-        return this.isSquareUnderAttack(kingX, kingY, color);
-    }
-
-    isSquareUnderAttack(x, y, defenderColor) {
-        const attackerColor = defenderColor === "white" ? "black" : "white";
-
-        for (let i = 0; i < 8; i++) {
-            for (let j = 0; j < 8; j++) {
-                const cell = this.boardMatrix[i][j];
-                if (cell.figure && cell.figure.color === attackerColor) {
-                    const moves = cell.figure.setWays();
-                    const targetIndex = x * 8 + y;
-
-                    if (moves[targetIndex] === 2) { // 2 - код для атаки
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     // Проверка на мат (базовая реализация)
     //isCheckmate(color) {
         // Реализовать проверку мата
