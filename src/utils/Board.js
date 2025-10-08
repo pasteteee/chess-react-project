@@ -102,6 +102,17 @@ export default class BoardModel {
         return this.moveCount;
     }
 
+    findKing(color){
+        for (let x = 0; x < 8; x++) {
+            for (let y = 0; y < 8; y++) {
+                let cell = this.boardMatrix[x][y];
+                if (cell.figure && cell.figure.color === color && cell.figure instanceof King) {
+                    return cell;
+                }
+            }
+        }
+    }
+
     // Проверка на мат (базовая реализация)
     //isCheckmate(color) {
         // Реализовать проверку мата
