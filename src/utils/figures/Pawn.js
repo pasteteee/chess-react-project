@@ -74,7 +74,10 @@ export class Pawn extends Figure {
                     array[captureIndex] = 2;
                 }
 
-                // TODO: Добавить логику для взятия на проходе (en passant)
+                // Проверяем взятие на проходе
+                if (this.canEnPassant(newX, newY)) {
+                    array[captureIndex] = 3; // 3 - специальный код для взятия на проходе
+                }
             }
         });
 
@@ -93,6 +96,21 @@ export class Pawn extends Figure {
 
         // Определяем, является ли ход двойным (для взятия на проходе)
         const isDoubleMove = Math.abs(targetCell.x - currentCell.x) === 2;
+
+        // Проверяем, является ли это взятием на проходе
+        const isEnPassant = this.canEnPassant(targetCell.x, targetCell.y);
+        console.log(targetCell.x, targetCell.y, isEnPassant);
+
+        // Если это взятие на проходе, убираем взятую пешку
+        if (isEnPassant) {
+            const capturedPawnCell = this.board.getCell(currentCell.x, targetCell.y);
+
+            if (capturedPawnCell && capturedPawnCell.figure) {
+                // Удаляем взятую пешку
+                capturedPawnCell.figure = null;
+            }
+        }
+
 
         // Перемещаем пешку на новую клетку
         targetCell.figure = this;
@@ -130,5 +148,38 @@ export class Pawn extends Figure {
      */
     clearEnPassantTarget() {
         this.enPassantTarget = null;
+    }
+
+    /**
+     * Проверяет, может ли пешка взять на проходе
+     * @param {number} targetX - целевая координата X
+     * @param {number} targetY - целевая координата Y
+     * @returns {boolean} - может ли пешка взять на проходе
+     */
+    canEnPassant(targetX, targetY) {
+        const { x: currentX, y: currentY } = this.cell;
+
+        // Пешка должна находиться на правильной горизонтали:
+        // Белые: 5-я горизонталь (индекс 4), Черные: 4-я горизонталь (индекс 3)
+        const correctRow = this.color === "white" ? 3 : 4;
+        if (currentX !== correctRow) return false;
+
+        // Целевая клетка должна быть по диагонали вперед
+        if (targetX !== currentX + this.moving) return false;
+        if (Math.abs(targetY - currentY) !== 1) return false;
+        // Проверяем, есть ли вражеская пешка слева или справа
+        const adjacentCell = this.board.getCell(currentX, targetY);
+        if (!adjacentCell || !adjacentCell.figure) return false;
+
+        const adjacentFigure = adjacentCell.figure;
+
+        // Проверяем, что это вражеская пешка с установленной целью для взятия на проходе
+        if (adjacentFigure instanceof Pawn &&
+            adjacentFigure.color !== this.color &&
+            adjacentFigure.enPassantTarget !== null) {
+            return true;
+        }
+
+        return false;
     }
 }
