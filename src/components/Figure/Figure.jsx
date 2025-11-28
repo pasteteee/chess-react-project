@@ -3,7 +3,7 @@ import styles from "./Figure.module.scss";
 import { getCoordinates } from "../../utils/additional";
 import { Ghost } from "../Ghost/Ghost";
 
-export const Figure = ({ index, value, pices, prevMove, isAnimated, isDragging, setIsDragging, setDraggingMove }) => {
+export const Figure = ({ index, value, pices, prevMove, isAnimated, isDragging, setIsDragging, setDraggingMove, isFlipped = false }) => {
   const imgSrc = `/pices/${pices}/${value.color[0]}${value.sym}.png`;
 
   const figureImg = useRef();
@@ -52,7 +52,7 @@ export const Figure = ({ index, value, pices, prevMove, isAnimated, isDragging, 
 
   return (
     <div
-      className={`${styles.figure} ${(isAnimated && !isDragging) ? styles.isAnimated : ""}`}
+      className={`${styles.figure} ${isFlipped ? styles.flipped : ""} ${(isAnimated && !isDragging) ? styles.isAnimated : ""}`}
       style={{
         "--figure-transfer-translate-x": `${prevMove.x - coord.x}px`,
         "--figure-transfer-translate-y": `${prevMove.y - coord.y}px`,
@@ -71,7 +71,7 @@ export const Figure = ({ index, value, pices, prevMove, isAnimated, isDragging, 
         src={imgSrc}
       />
 
-      {isDragging && <Ghost imgSrc={imgSrc} dragPosition={dragPosition} />}
+      {isDragging && <Ghost imgSrc={imgSrc} dragPosition={dragPosition} isFlipped={isFlipped} />}
     </div>
   );
 };

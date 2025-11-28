@@ -5,9 +5,44 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: var(--background-color);
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.button {
+    padding: 10px 18px;
+    background: rgba(var(--active-color-rgb, 123, 109, 207), 0.1);
+    color: var(--text-color);
+    border: 1px solid rgba(var(--active-color-rgb, 123, 109, 207), 0.3);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+        background: rgba(var(--active-color-rgb, 123, 109, 207), 0.2);
+        border-color: rgba(var(--active-color-rgb, 123, 109, 207), 0.5);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
 }
 
 .board__wrapper {
     width: 500px;
     height: 500px;
+    transition: transform 0.5s ease;
 }

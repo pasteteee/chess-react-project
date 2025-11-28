@@ -16,6 +16,7 @@
     --white-cell-color: var(--white-cell-color-dark);
     --black-cell-color: var(--black-cell-color-dark);
     --active-color: var(--active-color-dark);
+    --active-color-rgb: 123, 109, 207;
     --secondary-color: #6daacf;
     --board-border-color: var(--board-border-color-dark);
     --cell-underline: var(--cell-underline-dark);

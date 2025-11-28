@@ -1,6 +1,7 @@
 import { Figure } from "../FigureClass.js";
 import { calculatePointMoves } from "./figureUtils.js";
 import { Rook } from "./Rook.js";
+import { Pawn } from "./Pawn.js";
 import { getCoordinates } from "../additional.js";
 
 export class King extends Figure {
@@ -23,7 +24,6 @@ export class King extends Figure {
         // Проверка атакованы ли клетки на которые может походить король
         for (let i = 0; i < array.length; i++) {
             const { x, y } = getCoordinates(i);
-            console.log(x, y, array[i], this.isSquareUnderAttack(x, y, this.color));
             if(array[i] === 1 && this.isSquareUnderAttack(x, y, this.color)) {
                 array[i] = 0;
             }
@@ -68,7 +68,8 @@ export class King extends Figure {
         }
 
         // Проверяем, что король не проходит через шах
-        for (const squareY of squaresBetween.filter(y => y !== 1 && y !== 2)) {
+        // Проверяем все клетки между королем и ладьей, включая целевую клетку короля
+        for (const squareY of squaresBetween) {
             if (this.isSquareUnderAttack(x, squareY, this.color)) {
                 return false;
             }
@@ -78,36 +79,46 @@ export class King extends Figure {
     }
 
     isInCheck() {
-        let kingX, kingY;
-        // Проходим каждое поле
-        for (let x = 0; x < 8; x++) {
-            for (let y = 0; y < 8; y++) {
-                const cell = this.board.boardMatrix[x][y];
-                if (cell.figure && cell.figure instanceof King && cell.figure.color === this.color) {
-                    kingX = x;
-                    kingY = y;
-                    break;
-                }
-            }
-        }
-
-        if (kingX === undefined || kingY === undefined) return false;
+        // Используем текущую позицию короля напрямую
         return this.isSquareUnderAttack(this.cell.x, this.cell.y, this.color);
     }
 
     isSquareUnderAttack(x, y, defenderColor) {
         const attackerColor = defenderColor === "white" ? "black" : "white";
 
+        // Проверяем атаки от всех фигур, включая короля
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 const cell = this.board.boardMatrix[i][j];
-                // Проверяем какие клетки атакует каждая вражеская фигура(кроме короля)
-                if (cell.figure && cell.figure.color === attackerColor && !(cell.figure instanceof King)) {
-                    const moves = cell.figure.setWays();
-                    const targetIndex = x * 8 + y;
+                if (cell.figure && cell.figure.color === attackerColor) {
+                    // Для короля проверяем только соседние клетки (короли не могут быть рядом)
+                    if (cell.figure instanceof King) {
+                        const dx = Math.abs(i - x);
+                        const dy = Math.abs(j - y);
+                        if ((dx === 1 && dy <= 1) || (dx === 0 && dy === 1) || (dx === 1 && dy === 0)) {
+                            return true;
+                        }
+                    } else if (cell.figure instanceof Pawn) {
+                        // Пешки атакуют по диагонали вперед
+                        // Для белой пешки (moving = -1): атакует клетки (x-1, y-1) и (x-1, y+1)
+                        // Для черной пешки (moving = 1): атакует клетки (x+1, y-1) и (x+1, y+1)
+                        const pawn = cell.figure;
+                        const pawnX = i;
+                        const pawnY = j;
+                        const attackX = pawnX + pawn.moving; // Направление атаки пешки
+                        
+                        // Проверяем, находится ли целевая клетка на диагонали перед пешкой
+                        if (attackX === x && Math.abs(pawnY - y) === 1) {
+                            return true;
+                        }
+                    } else {
+                        // Для остальных фигур используем setWays
+                        const moves = cell.figure.setWays();
+                        const targetIndex = x * 8 + y;
 
-                    if (moves[targetIndex] === 2 || moves[targetIndex] === 1) { // 2 - код для атаки, 1 - код для хода
-                        return true;
+                        if (moves[targetIndex] === 2 || moves[targetIndex] === 1) { // 2 - код для атаки, 1 - код для хода
+                            return true;
+                        }
                     }
                 }
             }

@@ -10,11 +10,15 @@ export const Cell = ({
   clickEvent,
   prevMove,
   activeCell,
-  setDraggingMove
+  setDraggingMove,
+  isFlipped = false
 }) => {
   const pointClasses = ["", styles.symple, styles.beat, styles.check, styles.castle];
   const [isDragging, setIsDragging] = useState(false);
   const [isUnderlined, setUnderlined] = useState(false);
+
+  // Показываем точку только если есть активная клетка и валидный ход
+  const showPoint = activeCell !== null && validMoves[index] > 0;
 
   return (
     <div
@@ -24,9 +28,11 @@ export const Cell = ({
       color_type={value.color}
       data-index={index}
     >
-      <div data-index={index}
-        className={`${styles.point} ${pointClasses[validMoves[index]]}`}
-      ></div>
+      {showPoint && (
+        <div data-index={index}
+          className={`${styles.point} ${pointClasses[validMoves[index]]}`}
+        ></div>
+      )}
 
       {value.figure && (
         <Figure
@@ -38,6 +44,7 @@ export const Cell = ({
           setIsDragging={setIsDragging}
           index={index}
           setDraggingMove={setDraggingMove}
+          isFlipped={isFlipped}
         />
       )}
     </div>

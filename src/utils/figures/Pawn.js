@@ -14,6 +14,8 @@ export class Pawn extends Figure {
     isFirstMove = true;
     // Цель для взятия на проходе (если пешка сделала двойной ход)
     enPassantTarget = null;
+    // Флаг необходимости превращения пешки
+    needsPromotion = false;
 
     /**
      * Метод для расчета возможных ходов пешки
@@ -99,7 +101,6 @@ export class Pawn extends Figure {
 
         // Проверяем, является ли это взятием на проходе
         const isEnPassant = this.canEnPassant(targetCell.x, targetCell.y);
-        console.log(targetCell.x, targetCell.y, isEnPassant);
 
         // Если это взятие на проходе, убираем взятую пешку
         if (isEnPassant) {
@@ -132,7 +133,15 @@ export class Pawn extends Figure {
             this.clearEnPassantTarget();
         }
 
-        // TODO: Добавить логику превращения пешки при достижении 8 горизонтали
+        // Проверяем превращение пешки при достижении последней горизонтали
+        // Белые пешки превращаются на 0-й горизонтали (x === 0)
+        // Черные пешки превращаются на 7-й горизонтали (x === 7)
+        const promotionRow = this.color === "white" ? 0 : 7;
+        if (targetCell.x === promotionRow) {
+            // Устанавливаем флаг для превращения
+            this.needsPromotion = true;
+            this.promotionCell = targetCell;
+        }
     }
 
     /**
